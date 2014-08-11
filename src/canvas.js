@@ -309,5 +309,14 @@ Canvas.prototype = {
         }
 
         return this;
+    },
+    calculateLineEndWithAngle:function(x,y,angle,radius){
+        var dx = Math.sin(angle/180*Math.PI)*radius;
+        var dy = Math.cos(angle/180*Math.PI)*radius;
+        result = [];
+        result.push(x+dx);
+        result.push(y-dy);
+
+        return result;
     }
 };
