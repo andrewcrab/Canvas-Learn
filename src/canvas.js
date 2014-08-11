@@ -318,5 +318,8 @@ Canvas.prototype = {
         result.push(y-dy);
 
         return result;
+    },
+    event:function(eventName,callback){
+        this.canvas.addEventListener("mouseup",callback(e));
     }
 };
