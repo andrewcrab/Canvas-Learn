@@ -292,7 +292,7 @@ Canvas.prototype = {
      * @returns {Canvas}
      */
     clearCanvas:function(){
-        this.cxt.clearRect(0,0,this.canvasWidth,this.canvasHeight);
+        this.cxt.clearRect(0,0,this.width,this.height);
 
         return this;
     },
