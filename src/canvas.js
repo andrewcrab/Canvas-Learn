@@ -10,6 +10,8 @@
  */
 function Canvas(canvasID){
     //TODO:Not really ideal. Find a way to get rid of this line.
+    this.canvasID = canvasID||this.canvasID;
+
     this.init(canvasID);
 };
 
@@ -21,8 +23,7 @@ Canvas.prototype = {
     height:400,
     myCanvas:null,
     cxt:null,
-    init:function(canvasID){
-        this.canvasID = canvasID||this.canvasID;
+    init:function(){
         this.setCanvas(this.canvasID);
         //this.canvasWidth = this.myCanvas.width;
         //this.canvasHeight = this.myCanvas.height;

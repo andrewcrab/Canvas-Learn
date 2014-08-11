@@ -34,7 +34,9 @@
         var numerals = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
         numerals.forEach(function(numeral) {
             var end = calculateLineEndWithAngle(CENTER_X,CENTER_Y,numeral*30,HAND_RADIUS+5);
-            canvas.drawText(numeral,end[0]-2,end[1]+FONT_HEIGHT/3);
+            //Offset the with of the number
+            var numberWidth = canvas.cxt.measureText(numeral).width;
+            canvas.drawText(numeral,end[0]-numberWidth/2,end[1]+FONT_HEIGHT/3);
         });
 
         //Hands
@@ -45,7 +47,7 @@
         hour = hour < 12 ? hour : hour -12;
         var secondHandEndPoint = calculateLineEndWithAngle(CENTER_X,CENTER_Y,second*6,HAND_RADIUS);
         var minuteHandEndPoint = calculateLineEndWithAngle(CENTER_X,CENTER_Y,minute*6,HAND_RADIUS-10);
-        var hourHandEndPoint = calculateLineEndWithAngle(CENTER_X,CENTER_Y,hour*6 + minute/10,HAND_RADIUS-40);
+        var hourHandEndPoint = calculateLineEndWithAngle(CENTER_X,CENTER_Y,hour*30+minute/6,HAND_RADIUS-40);
         canvas
             .drawLine(CENTER_X,CENTER_Y,secondHandEndPoint[0],secondHandEndPoint[1])
             .drawLine(CENTER_X,CENTER_Y,minuteHandEndPoint[0],minuteHandEndPoint[1])
