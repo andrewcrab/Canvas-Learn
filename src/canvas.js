@@ -25,6 +25,7 @@ Canvas.prototype = {
     cxt:null,
     init:function(){
         this.setCanvas(this.canvasID);
+        this.cxt.save();
         //this.canvasWidth = this.myCanvas.width;
         //this.canvasHeight = this.myCanvas.height;
     },
@@ -233,6 +234,18 @@ Canvas.prototype = {
 
         return this;
     },
+    rotateCanvas:function(dx,dy){
+        if(dx === 0 && dy !== 0){
+            dx = 1;
+            dy = Infinity;
+        }
+        if(dy === 0 && dx !== 0){
+            dy = 1;
+            dx = Infinity;
+        }
+        this.cxt.rotate(Math.atan2(dy,dx));
+        return this;
+    },
     /**
      * Clean canvas
      * @returns {Canvas}
@@ -273,9 +286,11 @@ Canvas.prototype = {
         return result;
     },
     calculateDistance:function(x,y,x2,y2){
-
+        var dx = x2 - x,
+            dy = y2 - y;
+        return Math.sqrt(dx*dx + dy*dy);
     },
-    event:function(eventName,callback){
+    event:function(eventID,callback){
         this.canvas.addEventListener("mouseup",callback(e));
     },
     /*
@@ -291,11 +306,16 @@ Canvas.prototype = {
         for (var i = stepX; i < this.height; i += stepY){
             this.line(0,i,this.width,i);
         }
+        this.cxt.restore();
     },
-    drawAxis:function(x,y,x2,y2,step){
-        this.line(x,y,x2,y2);
-        for (var i = x + step; i < x2; i+= step){
-//            this.line(i,)
+    drawAxis:function(x,y,x2,y2,step,color){
+        this
+            .setStrokeStyle(color)
+            .line(x,y,x2,y2);
+        var distance = this.calculateDistance(x,y,x2,y2);
+        this.rotateCanvas(x2-x,y2-y);
+        for (var i = x; i <= distance + x; i+= step){
+            this.line(i,y-5,i,y+5);
         }
     }
 };

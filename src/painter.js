@@ -3,3 +3,5 @@
  */
 canvas = new Canvas();
 canvas.drawBackgroundGrid("lightgrey",10,10);
+canvas
+    .drawAxis(100,100,500,100,10,'blue');
