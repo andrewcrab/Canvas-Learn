@@ -234,16 +234,8 @@ Canvas.prototype = {
 
         return this;
     },
-    rotateCanvas:function(dx,dy){
-        if(dx === 0 && dy !== 0){
-            dx = 1;
-            dy = Infinity;
-        }
-        if(dy === 0 && dx !== 0){
-            dy = 1;
-            dx = Infinity;
-        }
-        this.cxt.rotate(Math.atan2(dy,dx));
+    rotateCanvas:function(angle){
+        this.cxt.rotate(angle);
         return this;
     },
     /**
@@ -296,26 +288,54 @@ Canvas.prototype = {
     /*
     ** Utility Shapes
      */
-    drawBackgroundGrid:function(color,stepX,stepY){
-        this
-            .setLineWidth(0.3)
-            .setStrokeStyle(color);
+    drawCanvasBorder:function(){
+      this.rect(0,0,this.width,this.height);
+      return this;
+    },
+    drawBackgroundGrid:function(stepX,stepY){
         for (var i = stepX; i < this.width; i += stepX){
             this.line(i,0,i,this.height);
         }
         for (var i = stepX; i < this.height; i += stepY){
             this.line(0,i,this.width,i);
         }
+        return this;
+    },
+    drawAxis:function(x,y,length,step){
+        //Axis
+        this
+            .line(x,y,x+length,y);
+
+        //Readings, long bar every 5 readings
+        for (var i = 0; i <= length/step; i ++){
+            if (i%5 ===0){
+                this.line(i*step + x,y+LENGTH_OF_AXIS_READING,i*step + x,y-LENGTH_OF_AXIS_READING);
+            }else{
+                this.line(i*step + x,y+LENGTH_OF_AXIS_READING*0.5,i*step + x,y-LENGTH_OF_AXIS_READING*0.5);
+
+            }
+        }
+
+        return this;
+    },
+    drawGuideLine:function(x,y){
+        console.log("yes");
+
+        this.cxt.save();
+        this.line(x,0,x,this.height)
+            .line(0,y,this.width,y);
         this.cxt.restore();
     },
-    drawAxis:function(x,y,x2,y2,step,color){
-        this
-            .setStrokeStyle(color)
-            .line(x,y,x2,y2);
-        var distance = this.calculateDistance(x,y,x2,y2);
-        this.rotateCanvas(x2-x,y2-y);
-        for (var i = x; i <= distance + x; i+= step){
-            this.line(i,y-5,i,y+5);
-        }
+
+    /*
+    ** Gagets
+     */
+    turnOnGuideLine:function(){
+        var that = this;
+        this.myCanvas.onmousemove = function(e){
+            that.drawGuideLine(e.clientX, e.clientY);
+        };
+        return this;
     }
 };
+var LENGTH_OF_AXIS_READING = 5;

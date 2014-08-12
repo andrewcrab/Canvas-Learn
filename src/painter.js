@@ -2,6 +2,20 @@
  * Created by Andrew on 14-8-12.
  */
 canvas = new Canvas();
-canvas.drawBackgroundGrid("lightgrey",10,10);
+
 canvas
-    .drawAxis(100,100,500,100,10,'blue');
+    .turnOnGuideLine()
+    .setStrokeStyle("lightgrey")
+    .setLineWidth(0.3)
+    .drawBackgroundGrid(10,10);
+
+canvas
+    .setStrokeStyle("blue")
+    .moveCanvas(100,350)
+    .rotateCanvas(-90/180*Math.PI)
+    .drawAxis(0,0,300,10)
+    .rotateCanvas(90/180*Math.PI)
+    .drawAxis(0,0,400,10)
+    .moveCanvas(-100,-300);
+
+
