@@ -23,6 +23,7 @@ Canvas.prototype = {
     height:400,
     myCanvas:null,
     cxt:null,
+    drawingLayerData:null,
     init:function(){
         this.setCanvas(this.canvasID);
         this.cxt.save();
@@ -51,6 +52,14 @@ Canvas.prototype = {
         this.canvasWidth = width;
         this.canvasHeight = height;
 
+        return this;
+    },
+    saveCanvasStyleConfiguration:function(){
+        this.cxt.save();
+        return this;
+    },
+    restoreCanvasStyleConfiguration:function(){
+        this.cxt.restore();
         return this;
     },
     /**
@@ -282,8 +291,18 @@ Canvas.prototype = {
             dy = y2 - y;
         return Math.sqrt(dx*dx + dy*dy);
     },
+    saveDrawingLayer: function() {
+        this.drawingLayerData = this.cxt.getImageData(0, 0,this.width,this.height);
+
+        return this;
+    },
+
+    restoreDrawingLayer:function() {
+        this.cxt.putImageData(this.drawingLayerData, 0, 0);
+        return this;
+    },
     event:function(eventID,callback){
-        this.canvas.addEventListener("mouseup",callback(e));
+        this.cxt.addEventListener("mouseup",callback(e));
     },
     /*
     ** Utility Shapes
@@ -319,8 +338,6 @@ Canvas.prototype = {
         return this;
     },
     drawGuideLine:function(x,y){
-        console.log("yes");
-
         this.cxt.save();
         this.line(x,0,x,this.height)
             .line(0,y,this.width,y);
@@ -331,10 +348,32 @@ Canvas.prototype = {
     ** Gagets
      */
     turnOnGuideLine:function(){
+
+
         var that = this;
+
+
+        this.myCanvas.onmousedown = function(e){
+            that.saveDrawingLayer();
+        }
         this.myCanvas.onmousemove = function(e){
-            that.drawGuideLine(e.clientX, e.clientY);
+            if (!that.drawingLayerData) this.saveDrawingLayer();
+
+            that
+                .clearCanvas()
+                .restoreDrawingLayer()
+                .saveCanvasStyleConfiguration()
+                .setStrokeStyle("blue")
+                .setLineWidth(0.5)
+                .drawGuideLine(e.clientX, e.clientY)
+                .restoreDrawingLayer()
+                .restoreCanvasStyleConfiguration();
+
         };
+        this.myCanvas.onmouseup = function(e){
+            that.restoreDrawingLayer();
+        }
+
         return this;
     }
 };
