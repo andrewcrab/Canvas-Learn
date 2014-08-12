@@ -296,11 +296,17 @@ Canvas.prototype = {
 
         return this;
     },
-
     restoreDrawingLayer:function() {
         this.cxt.putImageData(this.drawingLayerData, 0, 0);
         return this;
     },
+    calculatePositionOnCanvasFromEvent:function(e){
+        var x = e.clientX, y = e.clientY;
+        var bbox = this.myCanvas.getBoundingClientRect();
+        return { x: x - bbox.left * (canvas.width  / bbox.width),
+            y: y - bbox.top  * (canvas.height / bbox.height) };
+    },
+
     event:function(eventID,callback){
         this.cxt.addEventListener("mouseup",callback(e));
     },
@@ -342,6 +348,7 @@ Canvas.prototype = {
         this.line(x,0,x,this.height)
             .line(0,y,this.width,y);
         this.cxt.restore();
+        return this;
     },
 
     /*
@@ -353,26 +360,24 @@ Canvas.prototype = {
         var that = this;
 
 
-        this.myCanvas.onmousedown = function(e){
-            that.saveDrawingLayer();
-        }
+
         this.myCanvas.onmousemove = function(e){
-            if (!that.drawingLayerData) this.saveDrawingLayer();
+            var position = that.calculatePositionOnCanvasFromEvent(e);
+            if (!that.drawingLayerData){
+                that.saveDrawingLayer();
+            }
 
             that
                 .clearCanvas()
                 .restoreDrawingLayer()
                 .saveCanvasStyleConfiguration()
-                .setStrokeStyle("blue")
-                .setLineWidth(0.5)
-                .drawGuideLine(e.clientX, e.clientY)
-                .restoreDrawingLayer()
+                .setStrokeStyle("navy")
+                .setLineWidth(0.25)
+                .drawGuideLine(position.x+0.5, position.y+0.5)//Pixel is on 0.5, give integer x,y, you will nerver get 1 pixel
                 .restoreCanvasStyleConfiguration();
 
         };
-        this.myCanvas.onmouseup = function(e){
-            that.restoreDrawingLayer();
-        }
+
 
         return this;
     }
