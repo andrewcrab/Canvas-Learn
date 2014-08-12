@@ -49,7 +49,7 @@
         var minuteHandEndPoint = calculateLineEndWithAngle(CENTER_X,CENTER_Y,minute*6,HAND_RADIUS-10);
         var hourHandEndPoint = calculateLineEndWithAngle(CENTER_X,CENTER_Y,hour*30+minute/6,HAND_RADIUS-40);
         canvas
-            .drawLine(CENTER_X,CENTER_Y,secondHandEndPoint[0],secondHandEndPoint[1])
+            .line(CENTER_X,CENTER_Y,secondHandEndPoint[0],secondHandEndPoint[1])
             .drawLine(CENTER_X,CENTER_Y,minuteHandEndPoint[0],minuteHandEndPoint[1])
             .drawLine(CENTER_X,CENTER_Y,hourHandEndPoint[0],hourHandEndPoint[1]);
     }
