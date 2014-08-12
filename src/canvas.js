@@ -84,6 +84,11 @@ Canvas.prototype = {
 
         return this;
     },
+    setLineWidth:function(width){
+        this.cxt.lineWidth = width;
+
+        return this;
+    },
     /**
      *
      * @param x
@@ -250,6 +255,14 @@ Canvas.prototype = {
 
         return this;
     },
+    /**
+     * Utility Function
+     * @param x
+     * @param y
+     * @param angle
+     * @param radius
+     * @returns {Array|*}
+     */
     calculateLineEndWithAngle:function(x,y,angle,radius){
         var dx = Math.sin(angle/180*Math.PI)*radius;
         var dy = Math.cos(angle/180*Math.PI)*radius;
@@ -259,7 +272,30 @@ Canvas.prototype = {
 
         return result;
     },
+    calculateDistance:function(x,y,x2,y2){
+
+    },
     event:function(eventName,callback){
         this.canvas.addEventListener("mouseup",callback(e));
+    },
+    /*
+    ** Utility Shapes
+     */
+    drawBackgroundGrid:function(color,stepX,stepY){
+        this
+            .setLineWidth(0.3)
+            .setStrokeStyle(color);
+        for (var i = stepX; i < this.width; i += stepX){
+            this.line(i,0,i,this.height);
+        }
+        for (var i = stepX; i < this.height; i += stepY){
+            this.line(0,i,this.width,i);
+        }
+    },
+    drawAxis:function(x,y,x2,y2,step){
+        this.line(x,y,x2,y2);
+        for (var i = x + step; i < x2; i+= step){
+//            this.line(i,)
+        }
     }
 };
