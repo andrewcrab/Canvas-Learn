@@ -6,6 +6,10 @@ class Canvas
     @canvas
     @cxt
   init: ->
+    @setCanvas(@canvasID)
+  setCanvas: (canvasID)->
+    @canvas = window.document.getElementById(canvasID)
+    @cxt = @canvas.getContext("2d")
 
 
 
