@@ -15,35 +15,82 @@ function Canvas(canvasID){
     this.init(canvasID);
 };
 
-
+var LENGTH_OF_AXIS_READING = 5;
 Canvas.prototype = {
     constructor:Canvas,
     canvasID:"canvas",
     width:600,
     height:400,
-    myCanvas:null,
+    canvas:null,
     cxt:null,
     drawingLayerData:null,
+    /**
+     * Call this in constructor.
+     */
     init:function(){
         this.setCanvas(this.canvasID);
         this.cxt.save();
-        //this.canvasWidth = this.myCanvas.width;
-        //this.canvasHeight = this.myCanvas.height;
+        //this.canvasWidth = this.canvas.width;
+        //this.canvasHeight = this.canvas.height;
     },
     /**
-     *
+     *Tie canvas object on the document to Canvas.cxt
      * @param {String} canvasID
      * @returns {canvas}
      */
     setCanvas:function(canvasID){
         this.canvasID = canvasID;
-        this.myCanvas = window.document.getElementById(canvasID);
-        this.cxt = this.myCanvas.getContext("2d");
+        this.canvas = window.document.getElementById(canvasID);
+        this.cxt = this.canvas.getContext("2d");
+
+        return this;
+    },
+
+    //TODO: Write example on how to write style.
+    /**
+     * Set fill style.
+     * @param {String} style
+     * @returns {Canvas}
+     */
+    setFillStyle:function(style){
+        this.cxt.fillStyle = style;
 
         return this;
     },
     /**
-     *
+     * Set stroke style.
+     * @param {String} style
+     * @returns {Canvas}
+     */
+    setStrokeStyle:function(style){
+        this.cxt.strokeStyle = style;
+
+        return this;
+    },
+    /**
+     * Set line width.
+     * @param width
+     * @returns {Canvas}
+     */
+    setLineWidth:function(width){
+        this.cxt.lineWidth = width;
+
+        return this;
+    },
+    /**
+     * Set font style.
+     * @param {String} style
+     * @example
+     * @returns {canvas}
+     */
+    setFontStyle:function(style){
+        this.cxt.font = style;
+
+        return this;
+    },
+    //TODO:This function need more work. Study how to read css configuration.
+    /**
+     * Read canvas size or set it to Canvas.width/height
      * @param {Number} width
      * @param {Number} height
      * @returns {canvas}
@@ -54,57 +101,23 @@ Canvas.prototype = {
 
         return this;
     },
+    /**
+     * Save stroke and fill style, etc.
+     * @returns {Canvas}
+     */
     saveCanvasStyleConfiguration:function(){
         this.cxt.save();
         return this;
     },
+    /**
+     * Restore the configuration saved last time.
+     * @returns {Canvas}
+     */
     restoreCanvasStyleConfiguration:function(){
         this.cxt.restore();
         return this;
     },
-    /**
-     *
-     * @param {Number} fontSize
-     * @param {String} fontFamily
-     * @example
-     * @returns {canvas}
-     */
-    setFontStyle:function(style){
-        this.cxt.font = style;
 
-        return this;
-    },
-    /**
-     *
-     * @param {String} style
-     * @returns {Canvas}
-     */
-    setFillStyle:function(style){
-        this.cxt.fillStyle = style;
-
-        return this;
-    },
-    /**
-     *
-     * @param {String} style
-     * @returns {Canvas}
-     */
-    setStrokeStyle:function(style){
-        this.cxt.strokeStyle = style;
-
-        return this;
-    },
-    setLineWidth:function(width){
-        this.cxt.lineWidth = width;
-
-        return this;
-    },
-    /**
-     *
-     * @param x
-     * @param y
-     * @returns {Canvas}
-     */
     /**
      *Draw line on canvas.
      * @param {Number} x
@@ -122,7 +135,6 @@ Canvas.prototype = {
 
         return this;
     },
-
     /**
      *Draw rectangle on canvas.
      * @param {Number} x
@@ -136,7 +148,6 @@ Canvas.prototype = {
 
         return this;
     },
-
     /**
      * Draw circle on canvas with center and radius.
      * @param {Number} x
@@ -152,9 +163,8 @@ Canvas.prototype = {
 
         return this;
     },
-
     /**
-     *
+     * Draw polygram?? on canvas.
      * @param {Number...} points
      * @returns {canvas}
      */
@@ -175,11 +185,8 @@ Canvas.prototype = {
 
         return this;
     },
-
-
-
     /**
-     *
+     * Draw text on canvas
      * @param text
      * @param x
      * @param y
@@ -190,10 +197,8 @@ Canvas.prototype = {
 
         return this;
     },
-
-
     /**
-     *
+     * Draw image on canvas
      * @param {String} src Image location.
      * @param {Number} x
      * @param {Number} y
@@ -212,12 +217,8 @@ Canvas.prototype = {
 
         return this;
     },
-
-
-
-
     /**
-     *
+     * Draw mask circle on canvas.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} radius
@@ -237,12 +238,22 @@ Canvas.prototype = {
         return this;
     },
 
-
+    /**
+     * Move canvas by x,y.
+     * @param x
+     * @param y
+     * @returns {Canvas}
+     */
     moveCanvas:function(x,y){
         this.cxt.translate(x,y);
 
         return this;
     },
+    /**
+     * Rotate canvas by angle. To convert degree, use Math.PI*degree/180.
+     * @param angle
+     * @returns {Canvas}
+     */
     rotateCanvas:function(angle){
         this.cxt.rotate(angle);
         return this;
@@ -256,35 +267,40 @@ Canvas.prototype = {
 
         return this;
     },
+
     /**
      * Save image to a pop up window.
      * @returns {Canvas}
      */
-    saveImage:function(){
+    saveImageInNewWindow:function(){
         try{
-            window.open(this.myCanvas.toDataURL("image/png"));
+            window.open(this.canvas.toDataURL("image/png"));
         }catch(e){
             alert("Your browser do not support image saving.");
         }
 
         return this;
     },
+
     /**
-     * Utility Function
+     * Utility: Calculate the position of the end of the line by starting point, angle and distance.
      * @param x
      * @param y
      * @param angle
      * @param radius
      * @returns {Array|*}
      */
-    calculateLineEndWithAngle:function(x,y,angle,radius){
-        var dx = Math.sin(angle/180*Math.PI)*radius;
-        var dy = Math.cos(angle/180*Math.PI)*radius;
+    calculateLineEndWithAngle:function(x,y,angle,distance){
+        var dx = Math.sin(angle/180*Math.PI)*distance;
+        var dy = Math.cos(angle/180*Math.PI)*distance;
         result = [];
         result.push(x+dx);
         result.push(y-dy);
 
         return result;
+    },
+    calculateAddHalfPoint:function(arr){
+        
     },
     calculateDistance:function(x,y,x2,y2){
         var dx = x2 - x,
@@ -302,7 +318,7 @@ Canvas.prototype = {
     },
     calculatePositionOnCanvasFromEvent:function(e){
         var x = e.clientX, y = e.clientY;
-        var bbox = this.myCanvas.getBoundingClientRect();
+        var bbox = this.canvas.getBoundingClientRect();
         return { x: x - bbox.left * (canvas.width  / bbox.width),
             y: y - bbox.top  * (canvas.height / bbox.height) };
     },
@@ -361,7 +377,7 @@ Canvas.prototype = {
 
 
 
-        this.myCanvas.onmousemove = function(e){
+        this.canvas.onmousemove = function(e){
             var position = that.calculatePositionOnCanvasFromEvent(e);
             if (!that.drawingLayerData){
                 that.saveDrawingLayer();
@@ -382,4 +398,4 @@ Canvas.prototype = {
         return this;
     }
 };
-var LENGTH_OF_AXIS_READING = 5;
+
