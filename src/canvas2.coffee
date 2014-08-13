@@ -127,6 +127,12 @@ class Canvas
     dx = Math.sin(angleInDegree/180*Math.PI)*distance;
     dy = Math.cos(angleInDegree/180*Math.PI)*distance;
     x:x+dx, y:y-dy
+  calculatePositionOnCanvasFromEvent: (e) ->
+    x = e.clientX
+    y = e.clientY;
+    bbox = @canvas.getBoundingClientRect()
+    { x: x - bbox.left * (canvas.width  / bbox.width),y: y - bbox.top  * (canvas.height / bbox.height) };
+
 
   ###
   Utility Shapes
@@ -142,6 +148,29 @@ class Canvas
     @line(x+0.5,+0.5,x+0.5,@height+0.5) for x in [stepX..@width] by stepX
     @line(0.5,y+0.5,@width+0.5,y+0.5) for y in [stepY..@height] by stepY
     this
+  drawGuideLine: (x,y)->
+    @saveStyleConfiguration()
+    @setStrokeWidth(1)
+    @line(x+0.5,0,x+0.5,@height+0.5)
+    @line(0+0.5,y+0.5,@width+0.5,y+0.5)
+    @restoreStyleConfiguration()
+    this
+
+    ###
+  Utility Gagets
+###
+  turnOnGuideLine: ->
+    @saveImageData() if @imageData is null
+    @canvas.addEventListener "mousemove", (e) =>
+      position = @calculatePositionOnCanvasFromEvent(e)
+      @saveStyleConfiguration()
+      @setStrokeStyle("lightgreen")
+      @clearCanvas()
+      @restoreImageData()
+      @drawGuideLine(position.x,position.y)
+      @restoreStyleConfiguration()
+    this
+
 
 
 

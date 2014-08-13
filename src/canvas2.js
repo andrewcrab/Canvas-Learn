@@ -197,6 +197,17 @@
       };
     };
 
+    Canvas.prototype.calculatePositionOnCanvasFromEvent = function(e) {
+      var bbox, x, y;
+      x = e.clientX;
+      y = e.clientY;
+      bbox = this.canvas.getBoundingClientRect();
+      return {
+        x: x - bbox.left * (canvas.width / bbox.width),
+        y: y - bbox.top * (canvas.height / bbox.height)
+      };
+    };
+
 
     /*
     Utility Shapes
@@ -218,6 +229,38 @@
       for (y = _j = stepY, _ref1 = this.height; stepY > 0 ? _j <= _ref1 : _j >= _ref1; y = _j += stepY) {
         this.line(0.5, y + 0.5, this.width + 0.5, y + 0.5);
       }
+      return this;
+    };
+
+    Canvas.prototype.drawGuideLine = function(x, y) {
+      this.saveStyleConfiguration();
+      this.setStrokeWidth(1);
+      this.line(x + 0.5, 0, x + 0.5, this.height + 0.5);
+      this.line(0 + 0.5, y + 0.5, this.width + 0.5, y + 0.5);
+      this.restoreStyleConfiguration();
+      return this;
+
+      /*
+        Utility Gagets
+       */
+    };
+
+    Canvas.prototype.turnOnGuideLine = function() {
+      if (this.imageData === null) {
+        this.saveImageData();
+      }
+      this.canvas.addEventListener("mousemove", (function(_this) {
+        return function(e) {
+          var position;
+          position = _this.calculatePositionOnCanvasFromEvent(e);
+          _this.saveStyleConfiguration();
+          _this.setStrokeStyle("lightgreen");
+          _this.clearCanvas();
+          _this.restoreImageData();
+          _this.drawGuideLine(position.x, position.y);
+          return _this.restoreStyleConfiguration();
+        };
+      })(this));
       return this;
     };
 
