@@ -58,6 +58,23 @@ class Canvas
     @cxt.stroke()
     @cxt.fill()
     this
+  #TODO:Canvas.arc still have some problem. Need to find a way without using tangent line
+  arc: (x,y,x2,y2,radius) ->
+    @cxt.beginPath()
+    @cxt.moveTo(149,19)
+    @cxt.arcTo(150,20,150,70,50)
+    @cxt.stroke()
+    @cxt.fill()
+    this
+  poly: (points...) ->
+    @cxt.beginPath();
+    @cxt.moveTo(points.push(),points.push())
+    @cxt.lineTo(points.push(),points.push()) while points isnt null
+    @cxt.closePath()
+    @cxt.stroke()
+    @cxt.fill()
+    this
+
 
 root = exports ? this
 root.Canvas = Canvas
