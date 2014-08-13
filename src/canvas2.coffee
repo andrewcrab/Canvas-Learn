@@ -7,6 +7,10 @@ class Canvas
     @canvas = null
     @cxt = null
     @imageData = null
+    @xMouseDown = null
+    @yMouseDown = null
+    @xMouseUp = null
+    @yMouseUp = null
     #Initiation
     @init()
   init: ->
@@ -157,7 +161,7 @@ class Canvas
     this
 
     ###
-  Utility Gagets
+  Painting Gagets
 ###
   turnOnGuideLine: ->
     @saveImageData() if @imageData is null
@@ -170,6 +174,28 @@ class Canvas
       @drawGuideLine(position.x,position.y)
       @restoreStyleConfiguration()
     this
+  saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas: () ->
+    @canvas.addEventListener "mousedown", (e) =>
+      position = @calculatePositionOnCanvasFromEvent(e)
+      @xMouseDown = position.x
+      @yMouseDown = position.y
+      @saveImageData()
+    @canvas.addEventListener "mouseup", (e) =>
+      position = @calculatePositionOnCanvasFromEvent(e)
+      @xMouseUp = position.x
+      @yMouseUp = position.y
+      @restoreImageData()
+    this
+  turnOnDrawingLine: ->
+    @saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas()
+    @canvas.addEventListener "mousemove", (e) =>
+      position = @calculatePositionOnCanvasFromEvent(e)
+      @line(@xMouseDown,@yMouseDown,position.x,position.y)
+    @canvas.addEventListener "mouseup", (e) =>
+      @line(@xMouseDown,@yMouseDown,@xMouseUp,@yMouseUp);
+
+    this
+
 
 
 

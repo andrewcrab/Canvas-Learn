@@ -15,6 +15,10 @@
       this.canvas = null;
       this.cxt = null;
       this.imageData = null;
+      this.xMouseDown = null;
+      this.yMouseDown = null;
+      this.xMouseUp = null;
+      this.yMouseUp = null;
       this.init();
     }
 
@@ -241,7 +245,7 @@
       return this;
 
       /*
-        Utility Gagets
+        Painting Gagets
        */
     };
 
@@ -259,6 +263,45 @@
           _this.restoreImageData();
           _this.drawGuideLine(position.x, position.y);
           return _this.restoreStyleConfiguration();
+        };
+      })(this));
+      return this;
+    };
+
+    Canvas.prototype.saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas = function() {
+      this.canvas.addEventListener("mousedown", (function(_this) {
+        return function(e) {
+          var position;
+          position = _this.calculatePositionOnCanvasFromEvent(e);
+          _this.xMouseDown = position.x;
+          _this.yMouseDown = position.y;
+          return _this.saveImageData();
+        };
+      })(this));
+      this.canvas.addEventListener("mouseup", (function(_this) {
+        return function(e) {
+          var position;
+          position = _this.calculatePositionOnCanvasFromEvent(e);
+          _this.xMouseUp = position.x;
+          _this.yMouseUp = position.y;
+          return _this.restoreImageData();
+        };
+      })(this));
+      return this;
+    };
+
+    Canvas.prototype.turnOnDrawingLine = function() {
+      this.saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas();
+      this.canvas.addEventListener("mousemove", (function(_this) {
+        return function(e) {
+          var position;
+          position = _this.calculatePositionOnCanvasFromEvent(e);
+          return _this.line(_this.xMouseDown, _this.yMouseDown, position.x, position.y);
+        };
+      })(this));
+      this.canvas.addEventListener("mouseup", (function(_this) {
+        return function(e) {
+          return _this.line(_this.xMouseDown, _this.yMouseDown, _this.xMouseUp, _this.yMouseUp);
         };
       })(this));
       return this;

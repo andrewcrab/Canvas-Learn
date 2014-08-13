@@ -5,6 +5,7 @@ canvas
   .setStrokeStyle("black")
   .drawCanvasBorder()
   .turnOnGuideLine()
+  .turnOnDrawingLine()
 
 
 
