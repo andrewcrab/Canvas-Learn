@@ -11,6 +11,7 @@ class Canvas
     @yMouseDown = null
     @xMouseUp = null
     @yMouseUp = null
+    @isMouseDown = false
     #Initiation
     @init()
   init: ->
@@ -165,35 +166,49 @@ class Canvas
 ###
   turnOnGuideLine: ->
     @saveImageData() if @imageData is null
-    @canvas.addEventListener "mousemove", (e) =>
-      position = @calculatePositionOnCanvasFromEvent(e)
-      @saveStyleConfiguration()
-      @setStrokeStyle("lightgreen")
-      @clearCanvas()
-      @restoreImageData()
-      @drawGuideLine(position.x,position.y)
-      @restoreStyleConfiguration()
+    @canvas.addEventListener "mousemove", @turnOffGuideLineFunction
     this
+  turnOffGuideLineFunction: (e) =>
+    position = @calculatePositionOnCanvasFromEvent(e)
+    @saveStyleConfiguration()
+    @setStrokeStyle("lightgreen")
+    @clearCanvas()
+    @restoreImageData()
+    @drawGuideLine(position.x,position.y)
+    @restoreStyleConfiguration()
+  turnOffGuideLine: ->
+    @canvas.removeEventListener('mousemove',@turnOffGuideLineFunction)
+  turnOnDrawingLine: ->
+    @saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas()
+    @canvas.addEventListener "mousemove", (e) =>
+      if @isMouseDown
+        position = @calculatePositionOnCanvasFromEvent(e)
+        @line(@xMouseDown,@yMouseDown,position.x,position.y)
+    @canvas.addEventListener "mouseup", (e) =>
+      @line(@xMouseDown,@yMouseDown,@xMouseUp,@yMouseUp);
+      @saveImageData()
+      @turnOffGuideLine()
+    this
+
+  ###
+  Gagets Utility
+###
   saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas: () ->
     @canvas.addEventListener "mousedown", (e) =>
+      @isMouseDown = true
       position = @calculatePositionOnCanvasFromEvent(e)
       @xMouseDown = position.x
       @yMouseDown = position.y
-      @saveImageData()
+      @saveImageData() if @imageData is null
+      @turnOnGuideLine()
+    #TODO: Possible bugs, need to change to custom event.
     @canvas.addEventListener "mouseup", (e) =>
+      @isMouseDown = false
       position = @calculatePositionOnCanvasFromEvent(e)
       @xMouseUp = position.x
       @yMouseUp = position.y
       @restoreImageData()
-    this
-  turnOnDrawingLine: ->
-    @saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas()
-    @canvas.addEventListener "mousemove", (e) =>
-      position = @calculatePositionOnCanvasFromEvent(e)
-      @line(@xMouseDown,@yMouseDown,position.x,position.y)
-    @canvas.addEventListener "mouseup", (e) =>
-      @line(@xMouseDown,@yMouseDown,@xMouseUp,@yMouseUp);
-
+      @turnOffGuideLine()
     this
 
 

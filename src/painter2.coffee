@@ -4,7 +4,7 @@ canvas
   .drawBackgroundGrid(10,10)
   .setStrokeStyle("black")
   .drawCanvasBorder()
-  .turnOnGuideLine()
+  #.turnOnGuideLine()
   .turnOnDrawingLine()
 
 
