@@ -17,13 +17,13 @@ class Canvas
     this
   setStrokeStyle: (style) ->
     if style is null
-      @cxt.strokeStyle = "rgba(255,255,255,0)"
+      @cxt.strokeStyle = BLANK
     else
       @cxt.strokeStyle = style
     this
   setFillStyle: (style) ->
     if style is null
-      @cxt.fillStyle = "rgba(255,255,255,0)"
+      @cxt.fillStyle = BLANK
     else
       @cxt.fillStyle = style
     this
@@ -68,8 +68,8 @@ class Canvas
     this
   poly: (points...) ->
     @cxt.beginPath();
-    @cxt.moveTo(points.push(),points.push())
-    @cxt.lineTo(points.push(),points.push()) while points isnt null
+    @cxt.moveTo(points.pop(),points.pop())
+    @cxt.lineTo(points.pop(),points.pop()) while points.length isnt 0
     @cxt.closePath()
     @cxt.stroke()
     @cxt.fill()

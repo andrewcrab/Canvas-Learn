@@ -29,7 +29,7 @@
 
     Canvas.prototype.setStrokeStyle = function(style) {
       if (style === null) {
-        this.cxt.strokeStyle = "rgba(255,255,255,0)";
+        this.cxt.strokeStyle = BLANK;
       } else {
         this.cxt.strokeStyle = style;
       }
@@ -38,7 +38,7 @@
 
     Canvas.prototype.setFillStyle = function(style) {
       if (style === null) {
-        this.cxt.fillStyle = "rgba(255,255,255,0)";
+        this.cxt.fillStyle = BLANK;
       } else {
         this.cxt.fillStyle = style;
       }
@@ -102,9 +102,9 @@
       var points;
       points = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       this.cxt.beginPath();
-      this.cxt.moveTo(points.push(), points.push());
-      while (points !== null) {
-        this.cxt.lineTo(points.push(), points.push());
+      this.cxt.moveTo(points.pop(), points.pop());
+      while (points.length !== 0) {
+        this.cxt.lineTo(points.pop(), points.pop());
       }
       this.cxt.closePath();
       this.cxt.stroke();
