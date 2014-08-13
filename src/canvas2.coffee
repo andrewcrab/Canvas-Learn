@@ -123,6 +123,8 @@ class Canvas
     @cxt.putImageData(@imageData,0,0)
     this
 
+
+
   ###
   Calculation Utility
 ###
@@ -178,6 +180,7 @@ class Canvas
     @restoreStyleConfiguration()
   turnOffGuideLine: ->
     @canvas.removeEventListener('mousemove',@turnOffGuideLineFunction)
+
   turnOnDrawingLine: ->
     @saveCurrentCanvasAndWaitMouseUpToRestoreTheCanvas()
     @canvas.addEventListener "mousemove", (e) =>
