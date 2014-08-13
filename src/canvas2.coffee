@@ -5,6 +5,8 @@ class Canvas
     @height = 400
     @canvas
     @cxt
+  init: ->
+
 
 
 root = exports ? this
