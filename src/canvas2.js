@@ -3,12 +3,17 @@
   var Canvas, root;
 
   Canvas = (function() {
+    var BLANK;
+
+    BLANK = "rgba(255,255,255,0)";
+
     function Canvas(canvasID) {
       this.canvasID = canvasID != null ? canvasID : "canvas";
       this.width = 600;
       this.height = 400;
-      this.canvas;
-      this.cxt;
+      this.canvas = null;
+      this.cxt = null;
+      this.init();
     }
 
     Canvas.prototype.init = function() {
@@ -17,7 +22,62 @@
 
     Canvas.prototype.setCanvas = function(canvasID) {
       this.canvas = window.document.getElementById(canvasID);
-      return this.cxt = this.canvas.getContext("2d");
+      this.cxt = this.canvas.getContext("2d");
+      return this;
+    };
+
+    Canvas.prototype.setStrokeStyle = function(style) {
+      if (style === null) {
+        this.cxt.strokeStyle = "rgba(255,255,255,0)";
+      } else {
+        this.cxt.strokeStyle = style;
+      }
+      return this;
+    };
+
+    Canvas.prototype.setFillStyle = function(style) {
+      if (style === null) {
+        this.cxt.fillStyle = "rgba(255,255,255,0)";
+      } else {
+        this.cxt.fillStyle = style;
+      }
+      return this;
+    };
+
+    Canvas.prototype.setFontStyle = function(style) {
+      this.cxt.font = style;
+      return this;
+    };
+
+    Canvas.prototype.setStrokeWidth = function(width) {
+      this.cxt.lineWidth = width;
+      return this;
+    };
+
+    Canvas.prototype.saveStyleConfiguration = function() {
+      this.cxt.save();
+      return this;
+    };
+
+    Canvas.prototype.restoreStyleConfiguration = function() {
+      this.cxt.restore();
+      return this;
+    };
+
+    Canvas.prototype.line = function(x, y, x2, y2) {
+      this.cxt.beginPath();
+      this.cxt.moveTo(x, y);
+      this.cxt.lineTo(x2, y2);
+      this.cxt.closePath();
+      this.cxt.stroke();
+      return this;
+    };
+
+    Canvas.prototype.rect = function(x, y, width, height) {
+      this.cxt.strokeRect(x, y, width, height);
+      this.cxt.fillRect(x, y, width, height);
+      console.log("Fill is blank");
+      return this;
     };
 
     return Canvas;
