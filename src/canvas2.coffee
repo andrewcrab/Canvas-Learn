@@ -44,13 +44,19 @@ class Canvas
     @cxt.beginPath()
     @cxt.moveTo(x,y)
     @cxt.lineTo(x2,y2)
-    @cxt.closePath()
     @cxt.stroke()
     this
   rect: (x,y,width,height) ->
     @cxt.strokeRect(x,y,width,height)
     @cxt.fillRect(x,y,width,height)
-    console.log("Fill is blank")
+    this
+  circle: (x,y,radius) ->
+    @cxt.beginPath()
+    @cxt.moveTo(x,y)
+    @cxt.arc(x,y,radius,0,Math.PI*2)
+    @cxt.closePath()
+    @cxt.stroke()
+    @cxt.fill()
     this
 
 root = exports ? this

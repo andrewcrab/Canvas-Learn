@@ -68,7 +68,6 @@
       this.cxt.beginPath();
       this.cxt.moveTo(x, y);
       this.cxt.lineTo(x2, y2);
-      this.cxt.closePath();
       this.cxt.stroke();
       return this;
     };
@@ -76,7 +75,16 @@
     Canvas.prototype.rect = function(x, y, width, height) {
       this.cxt.strokeRect(x, y, width, height);
       this.cxt.fillRect(x, y, width, height);
-      console.log("Fill is blank");
+      return this;
+    };
+
+    Canvas.prototype.circle = function(x, y, radius) {
+      this.cxt.beginPath();
+      this.cxt.moveTo(x, y);
+      this.cxt.arc(x, y, radius, 0, Math.PI * 2);
+      this.cxt.closePath();
+      this.cxt.stroke();
+      this.cxt.fill();
       return this;
     };
 
