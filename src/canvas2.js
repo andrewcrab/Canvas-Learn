@@ -14,6 +14,7 @@
       this.height = 400;
       this.canvas = null;
       this.cxt = null;
+      this.imageData = null;
       this.init();
     }
 
@@ -26,6 +27,11 @@
       this.cxt = this.canvas.getContext("2d");
       return this;
     };
+
+
+    /*
+    Style Configuration
+     */
 
     Canvas.prototype.setStrokeStyle = function(style) {
       if (style === null) {
@@ -64,6 +70,11 @@
       this.cxt.restore();
       return this;
     };
+
+
+    /*
+    Draw Functions
+     */
 
     Canvas.prototype.line = function(x, y, x2, y2) {
       this.cxt.beginPath();
@@ -109,6 +120,104 @@
       this.cxt.closePath();
       this.cxt.stroke();
       this.cxt.fill();
+      return this;
+    };
+
+    Canvas.prototype.text = function(x, y, text) {
+      this.cxt.strokeText(text, x, y);
+      this.cxt.fillText(text, x, y);
+      return this;
+    };
+
+    Canvas.prototype.image = function(x, y, src) {
+      var img;
+      img = new Image();
+      img.src = src;
+      if (img.complete) {
+        this.cxt.drawImage(img, x, y);
+      } else {
+        img.onload = function() {
+          return this.cxt.drawImage(img, x, y);
+        };
+      }
+      return this;
+    };
+
+
+    /*
+    Canvas Movement
+     */
+
+    Canvas.prototype.moveCanvas = function(x, y) {
+      this.cxt.translate(x, y);
+      return this;
+    };
+
+    Canvas.prototype.rotateCanvas = function(angle) {
+      this.cxt.rotate(angle);
+      return this;
+    };
+
+
+    /*
+    Drawing Utility
+     */
+
+    Canvas.prototype.clearCanvas = function() {
+      this.cxt.clearRect(0, 0, this.width, this.height);
+      return this;
+    };
+
+    Canvas.prototype.saveImageData = function() {
+      this.imageData = this.cxt.getImageData(0, 0, this.width, this.height);
+      return this;
+    };
+
+    Canvas.prototype.restoreImageData = function() {
+      this.cxt.putImageData(this.imageData, 0, 0);
+      return this;
+    };
+
+
+    /*
+    Calculation Utility
+     */
+
+    Canvas.prototype.calculateDistanceBetweenTwoPoints = function(x, y, x2, y2) {
+      return Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
+    };
+
+    Canvas.prototype.calculateLineEndPositionByAngle = function(x, y, distance, angleInDegree) {
+      var dx, dy;
+      dx = Math.sin(angleInDegree / 180 * Math.PI) * distance;
+      dy = Math.cos(angleInDegree / 180 * Math.PI) * distance;
+      return {
+        x: x + dx,
+        y: y - dy
+      };
+    };
+
+
+    /*
+    Utility Shapes
+     */
+
+    Canvas.prototype.drawCanvasBorder = function() {
+      this.saveStyleConfiguration();
+      this.setFillStyle(null);
+      this.rect(0.5, 0.5, this.width - 1, this.height - 1);
+      this.restoreStyleConfiguration();
+      return this;
+    };
+
+    Canvas.prototype.drawBackgroundGrid = function(stepX, stepY) {
+      var x, y, _i, _j, _ref, _ref1;
+      for (x = _i = stepX, _ref = this.width; stepX > 0 ? _i <= _ref : _i >= _ref; x = _i += stepX) {
+        this.line(x + 0.5, +0.5, x + 0.5, this.height + 0.5);
+      }
+      for (y = _j = stepY, _ref1 = this.height; stepY > 0 ? _j <= _ref1 : _j >= _ref1; y = _j += stepY) {
+        this.line(0.5, y + 0.5, this.width + 0.5, y + 0.5);
+      }
       return this;
     };
 
