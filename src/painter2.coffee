@@ -1,13 +1,3 @@
-canvas = new Canvas
-canvas
-  .setStrokeStyle("lightblue")
-  .drawBackgroundGrid(10,10)
-  .setStrokeStyle("black")
-  .drawCanvasBorder()
-  #.turnOnGuideLine()
-  .turnOnDrawingLine()
 
-
-
-
-
+cxt = window.document.getElementById("canvas").getContext("2d")
+console.log cxt.canvas.width1

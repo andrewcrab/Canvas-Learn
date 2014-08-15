@@ -22,11 +22,13 @@
       this.xMouseUp = null;
       this.yMouseUp = null;
       this.isMouseDown = false;
+      this.objectsOnCanvas = new Array();
       this.init();
     }
 
     Canvas.prototype.init = function() {
-      return this.setCanvas(this.canvasID);
+      this.setCanvas(this.canvasID);
+      return this.moveCanvas(0.5, 0.5);
     };
 
     Canvas.prototype.setCanvas = function(canvasID) {
@@ -327,6 +329,43 @@
         };
       })(this));
       return this;
+    };
+
+
+    /*
+     Shapes with Class
+     */
+
+    Canvas.prototype.createLineFunc = function(x, y, x2, y2) {
+      this.x = x;
+      this.y = y;
+      this.x2 = x2;
+      this.y2 = y2;
+      return (function(_this) {
+        return function() {
+          return _this.line(_this.x, _this.y, _this.x2, _this.y2);
+        };
+      })(this);
+    };
+
+    Canvas.prototype.createLine = function(x, y, x2, y2) {
+      this.x = x;
+      this.y = y;
+      this.x2 = x2;
+      this.y2 = y2;
+      this.objectsOnCanvas.push(this.createLineFunc(this.x, this.y, this.x2, this.y2));
+      return this;
+    };
+
+    Canvas.prototype.drawAll = function() {
+      var closure, _i, _len, _ref, _results;
+      _ref = this.objectsOnCanvas;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        closure = _ref[_i];
+        _results.push(closure());
+      }
+      return _results;
     };
 
     return Canvas;

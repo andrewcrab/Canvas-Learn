@@ -12,10 +12,12 @@ class Canvas
     @xMouseUp = null
     @yMouseUp = null
     @isMouseDown = false
+    @objectsOnCanvas = new Array()
     #Initiation
     @init()
   init: ->
     @setCanvas(@canvasID)
+    @moveCanvas(0.5,0.5)
   setCanvas: (canvasID)->
     @canvas = window.document.getElementById(canvasID)
     @cxt = @canvas.getContext("2d")
@@ -214,8 +216,17 @@ class Canvas
       @turnOffGuideLine()
     this
 
+  ###
+   Shapes with Class
+###
+  createLineFunc: (@x,@y,@x2,@y2) ->
+    => @line(@x,@y,@x2,@y2)
+  createLine: (@x,@y,@x2,@y2) ->
+    @objectsOnCanvas.push @createLineFunc(@x,@y,@x2,@y2)
+    this
 
-
+  drawAll: ->
+    closure() for closure in @objectsOnCanvas
 
 
 root = exports ? this

@@ -21,3 +21,12 @@ blueHex = new Kinetic.RegularPolygon
 
 animLayer.add blueHex
 stage.add animLayer
+
+
+
+K = this.K
+
+K =
+  version: '0.0.1'
+  idCounter: 0,
+

@@ -4,13 +4,17 @@
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/src/painter.js" />
         <item url="file://$PROJECT_DIR$/src/painter2.js" />
+        <item url="file://$PROJECT_DIR$/src/kinetic-learn.js" />
         <item url="file://$PROJECT_DIR$/src/canvas2.js" />
+        <item url="file://$PROJECT_DIR$/src/canvas3.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/src/painter.js" />
       <root url="file://$PROJECT_DIR$/src/painter2.js" />
+      <root url="file://$PROJECT_DIR$/src/kinetic-learn.js" />
       <root url="file://$PROJECT_DIR$/src/canvas2.js" />
+      <root url="file://$PROJECT_DIR$/src/canvas3.js" />
     </CLASSES>
     <SOURCES />
   </library>
